@@ -164,7 +164,7 @@ namespace AKS
 
             /// TODO: Register Commands
 
-            // AKOS.Current.componentSystem.AddComponent("conMgr", null);
+            AKOS.Current.componentSystem.AddComponent("conMgr", new Commands.ConManager());
             // AKOS.Current.componentSystem.AddComponent("conLop", null);
 
             /// IDEA: Add Translations
@@ -174,9 +174,6 @@ namespace AKS
 
         static void Start()
         {
-            AKOS.Current.consoleManager.MoveBuffer(100);
-            AKOS.Current.consoleManager.FlushConsoleInputStream();
-            AKOS.Current.consoleManager.WriteSlow("", 0);
 
             /*
              * Ask user for Login
@@ -185,6 +182,8 @@ namespace AKS
              * [/][/] Ask for Input
              * [/][/] Understand Input & Execute
              */
+
+            AKOS.Current.componentSystem.RunComponent("conMgr", null);
         }
 
         static void End()
