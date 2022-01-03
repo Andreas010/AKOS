@@ -27,10 +27,18 @@ namespace AKS
                 Console.SetBufferSize(120, 30);
             }
 
-            Boot();
-            Load();
-            Start();
-            End();
+            try
+            {
+                AKOS.P();
+
+                Boot();
+                Load();
+                Start();
+                End();
+            } catch (Exception e)
+            {
+                AKOS.Current.logger.LogException(e);
+            }
 
             Console.ReadKey(true);
         }
@@ -48,7 +56,6 @@ namespace AKS
 #if !DEBUG
             Logo();
 #endif
-            AKOS.P();
 #if DEBUG
             AKOS.Current.environment.AddVariable("p_debug", "true");
 #else
@@ -132,7 +139,7 @@ namespace AKS
              */
 
             /// TODO: Register Basic Components
-            AKOS.Current.environment.AddVariable("p_path", InstanceField.programPath);
+            AKOS.Current.environment.AddVariable("p_path", InstanceField.programPath + "/");
             AKOS.Current.environment.AddVariable("p_path_mod", InstanceField.programPath + "/modules/");
 
             AKOS.Current.logger.Log("Registered Systems", Logger.LogLevel.Important);
@@ -172,17 +179,52 @@ namespace AKS
             AKOS.Current.logger.Log("Finished Loading", Logger.LogLevel.Important);
         }
 
+        static bool Login()
+        {
+            string path = AKOS.Current.environment.GetVariable("p_path") + "product.aconfig";
+            bool firstLogin = !File.Exists(path);
+
+            string password;
+            if (firstLogin)
+            {
+                Console.Write("Please enter your code: ");
+                password = Console.ReadLine();
+            }
+            else
+            {
+                ConfigLoaders.AkosConfig.AkosConfigTable table = AKOS.Current.configLoaders.AkosConfigManager.Get(File.ReadAllLines(path));
+                if (!table.Has("code"))
+                    return false;
+                password = table.Get("code").value;
+            }
+
+            AKOS.Current.logger.Log("Verifying", Logger.LogLevel.Important);
+
+            // string newPassword = "";
+            // 
+            // for(int i = 0; i < password.Length; i++)
+            //     newPassword += (char)(password[i] ^ 16);
+
+            if (password != "DWXD-UHBM-4730-4944")
+                return false;
+
+            if (firstLogin)
+                File.WriteAllText(path, "code:string=" + password);
+
+            return true;
+        }
+
         static void Start()
         {
+            AKOS.Current.consoleManager.MoveBuffer(50);
 
-            /*
-             * Ask user for Login
-             * Run "conMgr"
-             * [/] Run "cmdLop"
-             * [/][/] Ask for Input
-             * [/][/] Understand Input & Execute
-             */
-
+            if(!Login())
+            {
+                AKOS.Current.logger.Log("LOGIN UNSUCCESSFULL", Logger.LogLevel.Error);
+                Thread.Sleep(1000);
+                return;
+            }
+            
             AKOS.Current.componentSystem.RunComponent("conMgr", null);
         }
 

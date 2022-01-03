@@ -19,15 +19,18 @@ namespace AKS.Commands
             Directory.SetCurrentDirectory(curPath);
         }
 
-        public void Run(object[] args)
+        public void Run(object args)
         {
+            ConManager conMan = args as ConManager;
+
             while (true)
             {
                 AKOS.Current.consoleManager.FlushConsoleInputStream();
                 Console.Write(curPath + "> ");
                 string input = Console.ReadLine().Trim();
                 string callName = "";
-                ArgumentParser.ArgumentsContainer arguments = AKOS.Current.argumentPasser.GetNewArgumentContainer();
+                string arguments = "";
+                //ArgumentParser.ArgumentsContainer arguments = AKOS.Current.argumentPasser.GetNewArgumentContainer();
 
                 int spaceIndex = input.IndexOf(' ');
                 if (spaceIndex == -1)
@@ -35,7 +38,13 @@ namespace AKS.Commands
                 else
                 {
                     callName = input[..spaceIndex];
-                    arguments.Populate(input[(spaceIndex + 1)..]);
+                    //arguments.Populate(input[(spaceIndex + 1)..]);
+                    arguments = input[(spaceIndex+1)..];
+                }
+
+                if(conMan.commands.ContainsKey(callName.ToLower()))
+                {
+                    conMan.commands[callName.ToLower()].Run(arguments);
                 }
 
                 /*

@@ -42,7 +42,7 @@ namespace Andy.AKOS.Component
             AKOS.Current.logger.Log($"COMPONENT_SYSTEM: DOES NOT EXISTS; INIT -> {componentName}", Logger.LogLevel.Warning);
         }
 
-        public void RunComponent(string componentName, object[] args)
+        public void RunComponent(string componentName, object args)
         {
             for (int i = 0; i < components.Count; i++)
             {
@@ -102,6 +102,6 @@ namespace Andy.AKOS.Component
     public interface IComponentBase
     {
         public void Initialise();
-        public void Run(object[] args);
+        public void Run(object args);
     }
 }

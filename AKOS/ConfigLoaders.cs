@@ -37,15 +37,38 @@ namespace Andy.AKOS.Config
                     string type  = curLine[(colonIndex+1)..equalsIndex].Trim();
                     string value = curLine[(equalsIndex+1)..].Trim();
 
-                    Console.WriteLine($"\"{name}|{type}|{value}\"");
+                    values.Add(new()
+                    {
+                        name = name,
+                        value = value,
+                        type = type
+                    });
                 }
+
+                table.values = values.ToArray();
 
                 return table;
             }
 
-            public struct AkosConfigTable
+            public class AkosConfigTable
             {
                 public AkosConfigValue[] values;
+
+                public AkosConfigValue Get(string name)
+                {
+                    for (int i = 0; i < values.Length; i++)
+                        if (values[i].name == name)
+                            return values[i];
+                    return new AkosConfigValue();
+                }
+
+                public bool Has(string name)
+                {
+                    for (int i = 0; i < values.Length; i++)
+                        if (values[i].name == name)
+                            return true;
+                    return false;
+                }
             }
 
             public struct AkosConfigValue
