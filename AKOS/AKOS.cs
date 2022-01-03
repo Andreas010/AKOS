@@ -20,7 +20,7 @@ namespace Andy.AKOS
         public ComponentSystem componentSystem;
         public DllLoader dllLoader;
         public Logger logger;
-        public ArgumentPasser argumentPasser;
+        public ArgumentParser argumentPasser;
         public Environment environment;
         public LoadingVisualiser loadingVisualiser;
         public ConfigLoaders configLoaders;

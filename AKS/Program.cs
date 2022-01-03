@@ -165,7 +165,7 @@ namespace AKS
             /// TODO: Register Commands
 
             AKOS.Current.componentSystem.AddComponent("conMgr", new Commands.ConManager());
-            // AKOS.Current.componentSystem.AddComponent("conLop", null);
+            AKOS.Current.componentSystem.AddComponent("conLop", new Commands.ConLoop());
 
             /// IDEA: Add Translations
             

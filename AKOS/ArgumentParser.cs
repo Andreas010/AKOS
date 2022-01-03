@@ -2,7 +2,7 @@
 
 namespace Andy.AKOS.Arguments
 {
-    public class ArgumentPasser
+    public class ArgumentParser
     {
         public ArgumentsContainer GetNewArgumentContainer() => new();
 
@@ -19,20 +19,24 @@ namespace Andy.AKOS.Arguments
                 valueArgs = new List<ValueArgument>();
             }
 
-            public bool HasArgument(string name)
+            public bool HasArgument(string name, bool value, bool ignoreCase = false)
             {
-                for (int i = 0; i < booleanArgs.Count; i++)
+                if(!value)
                 {
-                    if (booleanArgs[i].name == name)
-                        return true;
-                }
-
-                for (int i = 0; i < valueArgs.Count; i++)
+                    for (int i = 0; i < booleanArgs.Count; i++)
+                    {
+                        if ((ignoreCase ? booleanArgs[i].name.ToLower() : booleanArgs[i].name) == (ignoreCase ? name.ToLower() : name))
+                            return true;
+                    }
+                } else
                 {
-                    if (valueArgs[i].name == name)
-                        return true;
+                    for (int i = 0; i < valueArgs.Count; i++)
+                    {
+                        if ((ignoreCase ? valueArgs[i].name.ToLower() : valueArgs[i].name) == (ignoreCase ? name.ToLower() : name))
+                            return true;
+                    }
                 }
-
+                
                 return false;
             }
 
@@ -75,10 +79,15 @@ namespace Andy.AKOS.Arguments
                     }
                     else if (args[i].StartsWith("-"))
                     {
-                        if (!args[i].Contains('='))
-                            continue;
+                        char equalsSign = '=';
+                        if (!args[i].Contains(equalsSign))
+                        {
+                            equalsSign = ':';
+                            if(!args[i].Contains(equalsSign))
+                                continue;
+                        }
 
-                        int equalsSignPos = args[i].IndexOf('=');
+                        int equalsSignPos = args[i].IndexOf(equalsSign);
 
                         valueArgs.Add(new ValueArgument()
                         {
