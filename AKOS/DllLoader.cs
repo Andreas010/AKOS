@@ -21,8 +21,7 @@ namespace Andy.AKOS
                 return;
             }
 
-            Assembly DLL = null;
-
+            Assembly DLL;
             try
             {
                 DLL = Assembly.LoadFile(path);
@@ -85,7 +84,7 @@ namespace Andy.AKOS
             }
         }
 
-        public void RunDll(string name, object[] args)
+        public void RunDll(string name, object args)
         {
             if (!HasDll(name))
             {
@@ -120,6 +119,6 @@ namespace Andy.AKOS
     public interface ILoadableAkosClass
     {
         public void Initialise(AKOS akos);
-        public void Run(AKOS akos, object[] args);
+        public void Run(AKOS akos, object args);
     }
 }
